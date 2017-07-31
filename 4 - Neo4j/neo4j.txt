@@ -1,0 +1,40 @@
+
+
+- Show the age of Denis and his friends
+MATCH (e:Person)-[:FRIEND_OF]->(e1:Person) WHERE e.name = "Denis" RETURN e.name, e.age, e1.name, e1.age;
+
+- Show all the person from Scotland
+MATCH (e:Person) WHERE e.country = "Scotland" RETURN e.name, e.country;
+
+- Show all the person with age less or equal than 20 from Ireland
+MATCH (e:Person) WHERE e.country = "Ireland" AND e.age <= 20 RETURN e.name, e.country, e.age;
+
+- Show all the person with age less or equal 30 playing football
+MATCH (e:Person) WHERE e.sport = "Football" AND e.age <= 30 RETURN e.name, e.sport, e.age;
+
+- Count the person by country
+MATCH (e:Person) WITH e.country AS country, COUNT(*) AS count RETURN country, count;
+
+- Show the average age of the person group by sport
+MATCH (e:Person) WITH e.sport AS sport, COUNT(*) AS count , AVG(e.age) AS avg RETURN sport, count, avg;
+
+- Show all the direct friends of Mary
+MATCH (e:Person)-[:FRIEND_OF]->(e1:Person) WHERE e.name = "Mary" RETURN e1.name;
+
+- Show all the friends of Paul with a maximum distance of 5 steps
+MATCH (e:Person)-[:FRIEND_OF*1..5]->(e1:Person) WHERE e.name = "Paul" RETURN DISTINCT e1.name;
+
+- Count all the friends of Paul with maximum distance 5 steps by nationality
+MATCH (e:Person)-[:FRIEND_OF*1..5]->(e1:Person) WHERE e.name = "Paul" WITH e1.country AS country RETURN DISTINCT country;
+
+- Show the path(s) between Paul and Lisa. For each path show the length. How many paths
+are there?
+MATCH p=(e:Person {name:'Paul'})-[:FRIEND_OF*..]->(e1:Person {name:'Lisa'}) RETURN p; ??
+Takes forever to complete...
+
+
+- Show the shortest path between Paul and Lisa.
+MATCH p=shortestPath((e:Person {name:"Paul"})-[:FRIEND_OF*..]->(e1:Person {name:"Lisa"})) RETURN p;
+
+- Show (if exists) a connection between Mary and all her friends, where the path can only
+contain persons that play football
